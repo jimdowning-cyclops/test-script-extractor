@@ -216,6 +216,29 @@ Read the correlated events:
 Read: output/<VIDEO_NAME>/correlated_events.json
 ```
 
+**CRITICAL: Distinguishing User Inputs from Calculated/Dynamic Values**
+
+When writing GIVEN-WHEN-THEN steps, carefully distinguish between:
+
+1. **User Inputs (CAN be conditions):** Values the user explicitly enters or selects
+   - Example: "enters '250' in Ruling Span field" ✓
+   - Example: "selects 'Pelican' conductor" ✓
+
+2. **Calculated/Algorithm Outputs (must NOT be conditions):** Values computed by the system
+   - Example: "displays calculated tension of 1116lb" ✗ (too specific)
+   - Example: "displays a calculated target tension (e.g., 1116lb)" ✓ (as example only)
+   - Example: "a non-zero tension value is displayed" ✓ (valid assertion)
+
+3. **Dynamic/Sensor Values (must NOT be conditions):** Values from external sources
+   - Example: "ambient temperature shows 41°F" ✗ (too specific)
+   - Example: "ambient temperature is auto-populated" ✓ (valid assertion)
+
+**In THEN clauses:**
+- For calculated values: Describe WHAT should happen, not the specific value
+- Include specific values as examples in parentheses: "(e.g., 1116lb)"
+- Never assert exact calculated values as pass/fail conditions
+- Focus on behavioral assertions: "value is displayed", "value changes", "value is within valid range"
+
 Generate the final test script in markdown format:
 
 ```markdown
@@ -247,7 +270,7 @@ Generate the final test script in markdown format:
 
 **GIVEN** <current state/precondition>
 **WHEN** <user action with specific element>
-**THEN** <expected outcome>
+**THEN** <expected outcome - use specific values only for user inputs; for calculated/dynamic values use "e.g." or describe behavior>
 
 > *Narration: "<original text>"*
 > *Timestamp: MM:SS - MM:SS*
@@ -258,16 +281,22 @@ Generate the final test script in markdown format:
 
 ## Dynamic Data Elements
 
-Elements containing variable/user-specific data:
+**IMPORTANT:** Elements listed here must NEVER have their specific values used as test conditions.
+The "Example" column shows values observed in the recording for reference only.
 
-| Element | Location | Type | Example |
-|---------|----------|------|---------|
+| Element | Location | Type | Example (for reference only) |
+|---------|----------|------|------------------------------|
 | Username | Header | User data | "John Doe" |
+| Calculated values | Various | Algorithm output | (list all computed values) |
+| Sensor readings | Various | Device/environment | (list temperature, location, etc.) |
 
 ## Suggested Assertions
 
-- [ ] <Verifiable condition>
-- [ ] <Another assertion>
+Focus on behavioral and structural assertions, NOT specific calculated values:
+- [ ] <UI state/navigation assertion>
+- [ ] <Input validation assertion>
+- [ ] <Data presence assertion - e.g., "tension value is displayed" not "tension is 1116lb">
+- [ ] <Behavioral assertion - e.g., "value changes when toggle is switched">
 
 ## Notes
 
