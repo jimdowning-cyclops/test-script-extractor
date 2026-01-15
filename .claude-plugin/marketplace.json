@@ -11,7 +11,7 @@
   "plugins": [
     {
       "name": "transcribe-test",
-      "source": ".",
+      "source": "./",
       "description": "Extract structured test scripts from screen recordings with voice narration",
       "version": "1.0.0",
       "keywords": ["testing", "video", "transcription", "automation"],
