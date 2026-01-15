@@ -1,0 +1,3 @@
+# Audio transcription - CTranslate2-based Whisper, ~4x faster than original
+# Runs completely locally - no API calls
+faster-whisper>=1.0.0
