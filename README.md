@@ -1,6 +1,6 @@
 # Test Script Extractor
 
-A Claude Code skill that extracts structured test scripts from narrated screen recordings of mobile app usage.
+A Claude Code plugin that extracts structured test scripts from narrated screen recordings of mobile app usage.
 
 ## Overview
 
@@ -11,23 +11,34 @@ This tool converts screen recordings with voice narration into GIVEN-WHEN-THEN t
 
 All processing happens locally - no external API calls required after initial setup.
 
-## Quick Start
+## Installation
 
-### 1. Clone and Setup
+### 1. Add the Marketplace
 
-```bash
-git clone https://github.com/jimdowning-cyclops/test-script-extractor.git
-cd test-script-extractor
-
-# Run the setup script (installs ffmpeg, Python deps)
-./.claude/skills/transcribe-test/scripts/setup.sh
+```
+/plugin marketplace add jimdowning-cyclops/test-script-extractor
 ```
 
-### 2. Use with Claude Code
+### 2. Install the Plugin
 
-Open the project in Claude Code, then simply ask:
+```
+/plugin install transcribe-test
+```
 
-> "Transcribe the video at sample-files/RPReplay_Final1768422339.MP4 into a test script"
+### 3. Run Setup
+
+After installation, run the setup script to install dependencies (ffmpeg, Python, faster-whisper):
+
+```bash
+# The plugin will prompt you to run setup on first use, or run manually:
+${CLAUDE_PLUGIN_ROOT}/skills/transcribe-test/scripts/setup.sh
+```
+
+## Usage
+
+In any Claude Code session, simply ask:
+
+> "Transcribe the video at /path/to/recording.mp4 into a test script"
 
 Claude will automatically use the `transcribe-test` skill to:
 1. Extract key frames from the video
@@ -36,61 +47,46 @@ Claude will automatically use the `transcribe-test` skill to:
 4. Correlate audio with visual changes
 5. Generate a structured test script
 
+Output files are created in an `output/` directory in your current working directory.
+
 ## Requirements
 
 - macOS or Linux
-- Python 3.11-3.13 (installed by setup script)
+- Python 3.11+ (installed by setup script)
 - ffmpeg (installed by setup script)
-- Claude Code with Max subscription
+- Claude Code
 - ~2GB disk space for Whisper models
 
-## Project Structure
+## Plugin Structure
 
 ```
 test-script-extractor/
-├── .claude/
-│   └── skills/
-│       └── transcribe-test/
-│           ├── SKILL.md           # Skill definition (orchestration guide)
-│           └── scripts/
-│               ├── extract_frames.py
-│               ├── transcribe_audio.py
-│               ├── requirements.txt
-│               ├── setup.sh
-│               └── check_setup.sh
-├── sample-files/                   # Test videos
-└── output/                         # Generated outputs
-    └── <video_name>/
-        ├── frames/                 # Extracted PNG frames
-        ├── frames.json             # Frame timestamps
-        ├── transcription.json      # Audio transcription
-        ├── frame_descriptions.json # Visual analysis
-        ├── correlated_events.json  # Audio/visual correlation
-        └── test_script.md          # Final test script
+├── .claude-plugin/
+│   ├── plugin.json           # Plugin manifest
+│   └── marketplace.json      # Marketplace definition
+└── skills/
+    └── transcribe-test/
+        ├── SKILL.md          # Skill definition
+        └── scripts/
+            ├── extract_frames.py
+            ├── transcribe_audio.py
+            ├── requirements.txt
+            ├── setup.sh
+            └── check_setup.sh
 ```
 
-## Manual Usage
+## Output
 
-If you prefer to run the pipeline manually:
+Output is created in your working directory:
 
-```bash
-# Activate the virtual environment
-source .venv/bin/activate
-
-# Stage 1: Extract frames
-python .claude/skills/transcribe-test/scripts/extract_frames.py \
-  sample-files/recording.mp4 \
-  --threshold 0.3 \
-  --output output/my_test/
-
-# Stage 2: Transcribe audio
-python .claude/skills/transcribe-test/scripts/transcribe_audio.py \
-  sample-files/recording.mp4 \
-  --model base \
-  --output output/my_test/
-
-# Stages 3-5: Ask Claude to analyze and generate
-# "Analyze the frames and transcription in output/my_test/ and generate a test script"
+```
+./output/<video_name>/
+├── frames/                 # Extracted PNG frames
+├── frames.json             # Frame timestamps
+├── transcription.json      # Audio transcription
+├── frame_descriptions.json # Visual analysis
+├── correlated_events.json  # Audio/visual correlation
+└── test_script.md          # Final test script
 ```
 
 ## Configuration
@@ -144,7 +140,7 @@ The skill generates a structured test script like:
 ### Check Dependencies
 
 ```bash
-./.claude/skills/transcribe-test/scripts/check_setup.sh
+${CLAUDE_PLUGIN_ROOT}/skills/transcribe-test/scripts/check_setup.sh
 ```
 
 ### Common Issues
@@ -157,15 +153,28 @@ apt install ffmpeg   # Linux
 
 **"faster-whisper not installed"**
 ```bash
-source .venv/bin/activate
-pip install -r .claude/skills/transcribe-test/scripts/requirements.txt
+${CLAUDE_PLUGIN_ROOT}/skills/transcribe-test/scripts/setup.sh
 ```
 
 **Poor transcription quality**
-→ Use a larger model: `--model small` or `--model medium`
+- Use a larger model: `--model small` or `--model medium`
 
 **Too few/many frames**
-→ Adjust threshold: `--threshold 0.2` (more) or `--threshold 0.4` (fewer)
+- Adjust threshold: `--threshold 0.2` (more) or `--threshold 0.4` (fewer)
+
+## Uninstall
+
+```
+/plugin uninstall transcribe-test
+```
+
+## Development
+
+To test the plugin locally without installing:
+
+```bash
+claude --plugin-dir /path/to/test-script-extractor
+```
 
 ## Offline Usage
 

@@ -1,0 +1,21 @@
+{
+  "name": "test-script-extractor",
+  "owner": {
+    "name": "Jim Downing",
+    "url": "https://github.com/jimdowning-cyclops"
+  },
+  "metadata": {
+    "description": "Video-to-test-script extraction tools",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "transcribe-test",
+      "source": ".",
+      "description": "Extract structured test scripts from screen recordings with voice narration",
+      "version": "1.0.0",
+      "keywords": ["testing", "video", "transcription", "automation"],
+      "category": "testing"
+    }
+  ]
+}

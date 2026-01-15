@@ -1,0 +1,13 @@
+{
+  "name": "transcribe-test",
+  "version": "1.0.0",
+  "description": "Extract structured test scripts from screen recordings with voice narration. Converts MP4/MOV videos into GIVEN-WHEN-THEN test cases.",
+  "author": {
+    "name": "Jim Downing",
+    "url": "https://github.com/jimdowning-cyclops"
+  },
+  "repository": "https://github.com/jimdowning-cyclops/test-script-extractor",
+  "license": "MIT",
+  "keywords": ["testing", "video", "transcription", "automation", "whisper"],
+  "skills": "./skills/"
+}

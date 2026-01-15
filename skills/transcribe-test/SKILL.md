@@ -26,18 +26,12 @@ Before using this skill, ensure dependencies are installed:
 
 ```bash
 # Check if setup is complete
-./scripts/check_setup.sh
+${CLAUDE_PLUGIN_ROOT}/skills/transcribe-test/scripts/check_setup.sh
 ```
 
 If not set up, run:
 ```bash
-# macOS
-brew install ffmpeg python@3.13
-
-# Create venv and install dependencies
-python3.13 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+${CLAUDE_PLUGIN_ROOT}/skills/transcribe-test/scripts/setup.sh
 ```
 
 ## How to Use
@@ -82,10 +76,10 @@ When asked to transcribe a video, follow these stages in order:
 Run the frame extraction script:
 
 ```bash
-source .venv/bin/activate && python scripts/extract_frames.py "<VIDEO_PATH>" --threshold 0.3 --output "output/<VIDEO_NAME>/"
+${CLAUDE_PLUGIN_ROOT}/skills/transcribe-test/.venv/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/transcribe-test/scripts/extract_frames.py "<VIDEO_PATH>" --threshold 0.3 --output "output/<VIDEO_NAME>/"
 ```
 
-Replace `<VIDEO_PATH>` with the actual video path and `<VIDEO_NAME>` with a sanitized name (no spaces, lowercase).
+Replace `<VIDEO_PATH>` with the actual video path and `<VIDEO_NAME>` with a sanitized name (no spaces, lowercase). Output is created in the current working directory.
 
 **Verify output:**
 - Check that `output/<VIDEO_NAME>/frames.json` exists
@@ -99,7 +93,7 @@ If too many frames (> 50), re-run with `--threshold 0.4`.
 Run the transcription script:
 
 ```bash
-source .venv/bin/activate && python scripts/transcribe_audio.py "<VIDEO_PATH>" --model base --output "output/<VIDEO_NAME>/"
+${CLAUDE_PLUGIN_ROOT}/skills/transcribe-test/.venv/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/transcribe-test/scripts/transcribe_audio.py "<VIDEO_PATH>" --model base --output "output/<VIDEO_NAME>/"
 ```
 
 **Verify output:**
@@ -337,8 +331,8 @@ Total steps: <N>
 **"ffmpeg not found"**
 → Install with `brew install ffmpeg` (macOS) or `apt install ffmpeg` (Linux)
 
-**"faster-whisper not installed"**
-→ Run `source .venv/bin/activate && pip install -r requirements.txt`
+**"faster-whisper not installed" or skill not working**
+→ Run `${CLAUDE_PLUGIN_ROOT}/skills/transcribe-test/scripts/setup.sh` to install dependencies
 
 **Poor transcription quality**
 → Re-run Stage 2 with `--model small` for better accuracy
